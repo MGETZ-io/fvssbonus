@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FVSS Bonus - Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .points { font-size: 24px; font-weight: bold; }
+        button { padding: 10px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Dein Punktestand</h1>
+    <p class="points">0,0 Punkte</p>
+    
+    <button onclick="scanQR()">QR-Code scannen</button>
+
+    <script>
+        let points = 0.0;
+
+        function scanQR() {
+            const qrCode = prompt("Gib den gescannten QR-Code ein:");
+
+            if (qrCode === "85274319") { // Punkte sammeln
+                let betrag = parseFloat(prompt("Wie viel hast du bezahlt? (in €)"));
+                if (isNaN(betrag) || betrag <= 0) {
+                    alert("Bitte einen gültigen Betrag eingeben!");
+                    return;
+                }
+                let newPoints = betrag * 0.5; // 1€ = 0,5 Punkte
+                points += Math.round(newPoints * 2) / 2; // Punkte in 0,5er-Schritten runden
+                document.querySelector(".points").innerText = points.toFixed(1) + " Punkte";
+                alert(`${newPoints.toFixed(1)} Punkte wurden hinzugefügt!`);
+            } else if (qrCode === "43896712") { // Punkte ausgeben
+                let abziehen = parseFloat(prompt("Wie viele Punkte möchtest du abziehen?"));
+                if (isNaN(abziehen) || abziehen <= 0 || abziehen > points) {
+                    alert("Ungültige Eingabe! Stelle sicher, dass du genügend Punkte hast.");
+                    return;
+                }
+                points -= abziehen;
+                document.querySelector(".points").innerText = points.toFixed(1) + " Punkte";
+                alert(`${abziehen.toFixed(1)} Punkte wurden abgezogen!`);
+            } else {
+                alert("Ungültiger QR-Code!");
+            }
+        }
+    </script>
+</body>
+</html>
