@@ -4,24 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FVSS Bonus - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-        .points { font-size: 24px; font-weight: bold; }
-        button { padding: 10px; margin: 10px; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #3a3a3a;
+            font-size: 32px;
+            margin-top: 20px;
+        }
+
+        .points {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2d9cdb;
+            margin: 20px;
+        }
+
+        button {
+            background-color: #2d9cdb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            width: 250px;
+        }
+
+        button:hover {
+            background-color: #1f7ea5;
+        }
+
+        #scanner-container {
+            margin-top: 20px;
+            width: 100%;
+            height: 300px;
+            border: 2px solid #2d9cdb;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .scanner-button {
+            margin-top: 20px;
+            background-color: #1f7ea5;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .container input {
+            padding: 10px;
+            width: 60%;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
-    <h1>Dein Punktestand</h1>
-    <p class="points">0,0 Punkte</p>
-    
-    <button onclick="scanQR()">QR-Code scannen</button>
+
+    <h1>Dein FVSS Bonus</h1>
+    <p class="points" id="points">0,0 Punkte</p>
+
+    <div class="container">
+        <button onclick="startScanner()">QR-Code scannen</button>
+        <button onclick="addPoints()">Punkte hinzufügen</button>
+    </div>
+
+    <div id="scanner-container"></div>
+
+    <div id="betrag-container" class="container">
+        <input type="number" id="betrag" placeholder="Betrag eingeben (€)" step="0.01">
+    </div>
 
     <script>
         let points = 0.0;
 
-        function scanQR() {
-            const qrCode = prompt("Gib den gescannten QR-Code ein:");
+        function startScanner() {
+            // Zeige den Scanner
+            document.getElementById("scanner-container").style.display = "block";
 
+            const html5QrCode = new Html5Qrcode("scanner-container");
+
+            // Starte den QR-Scanner
+            html5QrCode.start(
+                { facingMode: "environment" }, // Kameraauswahl
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                (decodedText) => {
+                    html5QrCode.stop(); // Stoppe den Scanner
+                    document.getElementById("scanner-container").style.display = "none";
+                    handleQRCode(decodedText);
+                },
+                (errorMessage) => {
+                    // Fehlerbehandlung
+                }
+            );
+        }
+
+        function handleQRCode(qrCode) {
             if (qrCode === "85274319") { // Punkte sammeln
                 let betrag = parseFloat(prompt("Wie viel hast du bezahlt? (in €)"));
                 if (isNaN(betrag) || betrag <= 0) {
@@ -30,7 +123,7 @@
                 }
                 let newPoints = betrag * 0.5; // 1€ = 0,5 Punkte
                 points += Math.round(newPoints * 2) / 2; // Punkte in 0,5er-Schritten runden
-                document.querySelector(".points").innerText = points.toFixed(1) + " Punkte";
+                document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
                 alert(`${newPoints.toFixed(1)} Punkte wurden hinzugefügt!`);
             } else if (qrCode === "43896712") { // Punkte ausgeben
                 let abziehen = parseFloat(prompt("Wie viele Punkte möchtest du abziehen?"));
@@ -39,11 +132,23 @@
                     return;
                 }
                 points -= abziehen;
-                document.querySelector(".points").innerText = points.toFixed(1) + " Punkte";
+                document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
                 alert(`${abziehen.toFixed(1)} Punkte wurden abgezogen!`);
             } else {
                 alert("Ungültiger QR-Code!");
             }
+        }
+
+        function addPoints() {
+            let betrag = parseFloat(document.getElementById("betrag").value);
+            if (isNaN(betrag) || betrag <= 0) {
+                alert("Bitte einen gültigen Betrag eingeben!");
+                return;
+            }
+
+            let newPoints = betrag * 0.5;
+            points += Math.round(newPoints * 2) / 2; // Punkte in 0,5er-Schritten runden
+            document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
         }
     </script>
 </body>
