@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FVSS Bonus - Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 0; }
+        .splash { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #ffcc00; }
+        .splash h1 { font-weight: 100; }
+        .splash span { font-weight: bold; }
+        .login { display: none; padding: 20px; }
+        input, button { display: block; width: 80%; margin: 10px auto; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="splash">
+        <h1>FVSS <span>Bonus</span></h1>
+        <p>Lädt...</p>
+    </div>
+
+    <div class="login">
+        <h2>Login</h2>
+        <input type="text" id="samsonNummer" placeholder="SamsON Zugangsnummer">
+        <input type="password" id="password" placeholder="Passwort">
+        <button onclick="checkLogin()">Anmelden</button>
+    </div>
+
+    <script>
+        setTimeout(() => { document.querySelector('.splash').style.display = 'none'; document.querySelector('.login').style.display = 'block'; }, 2000);
+
+        function checkLogin() {
+            const user = document.getElementById("samsonNummer").value;
+            const pass = document.getElementById("password").value;
+
+            if (user === "Admin@fvssbonus.de" && pass === "AdminPasswort123") {
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Falsche Anmeldedaten!");
+            }
+        }
+    </script>
+</body>
+</html>
