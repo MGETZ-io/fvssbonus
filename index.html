@@ -14,6 +14,7 @@
     </style>
 </head>
 <body>
+
     <div class="splash">
         <h1>FVSS <span>Bonus</span></h1>
         <p>Lädt...</p>
@@ -27,18 +28,23 @@
     </div>
 
     <script>
-        setTimeout(() => { document.querySelector('.splash').style.display = 'none'; document.querySelector('.login').style.display = 'block'; }, 2000);
+        setTimeout(() => {
+            document.querySelector('.splash').style.display = 'none';
+            document.querySelector('.login').style.display = 'block';
+        }, 2000);
 
         function checkLogin() {
             const user = document.getElementById("samsonNummer").value;
             const pass = document.getElementById("password").value;
 
-            if (user === "Admin@fvssbonus.de" && pass === "AdminPasswort123") {
-                window.location.href = "dashboard.html";
+            if (user && pass) {
+                // Leitet mit den Anmeldedaten als URL-Parameter weiter
+                window.location.href = `dashboard.html?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
             } else {
-                alert("Falsche Anmeldedaten!");
+                alert("Bitte alle Felder ausfüllen!");
             }
         }
     </script>
+
 </body>
 </html>
