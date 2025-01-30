@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FVSS Bonus - Dashboard</title>
+    <link rel="icon" type="image/png" href="logo.png"> <!-- Favicon -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 0; background: #ffcc00; }
         .splash { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #ffcc00; color: white; font-size: 24px; }
+        .splash img { width: 120px; margin-bottom: 20px; }
         .dashboard { display: none; padding: 20px; text-align: center; }
         h1 { color: #3a3a3a; font-size: 28px; margin-top: 20px; }
-        .points-container { background: white; padding: 15px; border-radius: 10px; display: inline-block; margin: 20px; }
+        .progress-container { position: relative; width: 250px; height: 125px; margin: 20px auto; }
+        .progress-circle { width: 100%; height: 100%; border-radius: 125px 125px 0 0; background: #eee; position: absolute; top: 0; left: 0; overflow: hidden; }
+        .progress-fill { width: 100%; height: 100%; position: absolute; top: 100%; left: 0; background: #d32f2f; transition: top 1s ease-in-out; }
+        .points-container { font-size: 20px; font-weight: bold; margin-top: 10px; }
         .points { font-size: 36px; font-weight: bold; color: #d32f2f; }
         button { background: #d32f2f; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 5px; margin: 10px; font-size: 18px; }
         #reader { width: 300px; height: 300px; margin: 20px auto; display: none; }
@@ -19,12 +24,19 @@
 <body>
 
     <div class="splash">
+        <img src="logo.png" alt="FVSS Bonus Logo">
         <h1 id="welcome"></h1>
         <p>Lädt...</p>
     </div>
 
     <div class="dashboard">
         <h1>FVSS Bonus</h1>
+        
+        <div class="progress-container">
+            <div class="progress-circle">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
         <div class="points-container">
             <p class="points" id="points">0,0 Punkte</p>
         </div>
@@ -37,6 +49,7 @@
         let user = "";
         let points = 0.0;
         let scanner = null;
+        const maxPoints = 500;
 
         function getUserFromURL() {
             const params = new URLSearchParams(window.location.search);
@@ -46,13 +59,20 @@
             const storedPoints = localStorage.getItem(`points_${user}`);
             if (storedPoints) {
                 points = parseFloat(storedPoints);
-                document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
+                updateProgress();
             }
 
             setTimeout(() => {
                 document.querySelector(".splash").style.display = "none";
                 document.querySelector(".dashboard").style.display = "block";
             }, 2000);
+        }
+
+        function updateProgress() {
+            document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
+            let percentage = Math.min(points / maxPoints, 1) * 100;
+            document.getElementById("progressFill").style.top = (100 - percentage) + "%";
+            localStorage.setItem(`points_${user}`, points);
         }
 
         function startScanner() {
@@ -62,7 +82,7 @@
                 scanner = new Html5Qrcode("reader");
 
                 scanner.start(
-                    { facingMode: "environment" },  // Rückkamera verwenden
+                    { facingMode: "environment" },
                     { fps: 10, qrbox: 250 },
                     (decodedText) => {
                         stopScanner();
@@ -92,7 +112,7 @@
                     return;
                 }
                 let newPoints = betrag * 0.5;
-                points += Math.round(newPoints * 2) / 2;
+                points = Math.min(points + Math.round(newPoints * 2) / 2, maxPoints);
             } else if (qrCode === "43896712") {
                 let abziehen = parseFloat(prompt("Wie viele Punkte möchtest du abziehen?"));
                 if (isNaN(abziehen) || abziehen <= 0 || abziehen > points) {
@@ -105,8 +125,7 @@
                 return;
             }
 
-            document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
-            localStorage.setItem(`points_${user}`, points);
+            updateProgress();
         }
 
         getUserFromURL();
