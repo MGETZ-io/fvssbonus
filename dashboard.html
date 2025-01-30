@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FVSS Bonus - Dashboard</title>
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 0; background: #ffcc00; }
         .splash { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #ffcc00; color: white; font-size: 24px; }
@@ -13,7 +13,7 @@
         .points-container { background: white; padding: 15px; border-radius: 10px; display: inline-block; margin: 20px; }
         .points { font-size: 36px; font-weight: bold; color: #d32f2f; }
         button { background: #d32f2f; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 5px; margin: 10px; font-size: 18px; }
-        #scanner-container { margin: 20px auto; width: 300px; height: 300px; display: none; }
+        #reader { width: 300px; height: 300px; margin: 20px auto; display: none; }
     </style>
 </head>
 <body>
@@ -30,12 +30,13 @@
         </div>
 
         <button onclick="startScanner()">QR-Code scannen</button>
-        <div id="scanner-container"></div>
+        <div id="reader"></div>
     </div>
 
     <script>
         let user = "";
         let points = 0.0;
+        let scanner = null;
 
         function getUserFromURL() {
             const params = new URLSearchParams(window.location.search);
@@ -55,19 +56,32 @@
         }
 
         function startScanner() {
-            document.getElementById("scanner-container").style.display = "block";
-            const html5QrCode = new Html5Qrcode("scanner-container");
+            document.getElementById("reader").style.display = "block";
 
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                (decodedText) => {
-                    html5QrCode.stop();
-                    document.getElementById("scanner-container").style.display = "none";
-                    handleQRCode(decodedText);
-                },
-                (errorMessage) => {}
-            );
+            if (!scanner) {
+                scanner = new Html5Qrcode("reader");
+
+                scanner.start(
+                    { facingMode: "environment" },  // Rückkamera verwenden
+                    { fps: 10, qrbox: 250 },
+                    (decodedText) => {
+                        stopScanner();
+                        handleQRCode(decodedText);
+                    },
+                    (errorMessage) => { }
+                ).catch(err => {
+                    alert("Kamera kann nicht gestartet werden: " + err);
+                });
+            }
+        }
+
+        function stopScanner() {
+            if (scanner) {
+                scanner.stop().then(() => {
+                    document.getElementById("reader").style.display = "none";
+                    scanner = null;
+                }).catch(err => console.log("Scanner konnte nicht gestoppt werden: ", err));
+            }
         }
 
         function handleQRCode(qrCode) {
