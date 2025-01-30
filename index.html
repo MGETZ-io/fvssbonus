@@ -4,23 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FVSS Bonus - Login</title>
+    <link rel="icon" type="image/png" href="logo.png"> <!-- Favicon hinzufügen -->
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 0; }
-        .splash { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #ffcc00; }
-        .splash h1 { font-weight: 100; }
-        .splash span { font-weight: bold; }
+        body { font-family: Arial, sans-serif; text-align: center; margin: 0; background: #ffcc00; }
+        .splash { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #ffcc00; color: white; font-size: 24px; }
+        .splash img { width: 120px; height: auto; margin-bottom: 20px; } /* Logo-Styling */
         .login { display: none; padding: 20px; }
-        input, button { display: block; width: 80%; margin: 10px auto; padding: 10px; }
+        h1 { font-weight: 100; }
+        span { font-weight: bold; }
+        input, button { display: block; width: 80%; margin: 10px auto; padding: 10px; font-size: 16px; }
+        button { background: #d32f2f; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .login-logo { width: 100px; margin-bottom: 20px; } /* Login-Logo */
     </style>
 </head>
 <body>
 
     <div class="splash">
+        <img src="logo.png" alt="FVSS Bonus Logo"> <!-- Logo im Splash Screen -->
         <h1>FVSS <span>Bonus</span></h1>
         <p>Lädt...</p>
     </div>
 
     <div class="login">
+        <img src="logo.png" alt="FVSS Bonus Logo" class="login-logo"> <!-- Logo im Login -->
         <h2>Login</h2>
         <input type="text" id="samsonNummer" placeholder="SamsON Zugangsnummer">
         <input type="password" id="password" placeholder="Passwort">
@@ -38,10 +44,9 @@
             const pass = document.getElementById("password").value;
 
             if (user && pass) {
-                // Leitet mit den Anmeldedaten als URL-Parameter weiter
-                window.location.href = `dashboard.html?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
+                window.location.href = `dashboard.html?user=${encodeURIComponent(user)}`;
             } else {
-                alert("Bitte alle Felder ausfüllen!");
+                alert("Bitte Zugangsdaten eingeben!");
             }
         }
     </script>
