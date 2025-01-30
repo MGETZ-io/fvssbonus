@@ -4,44 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FVSS Bonus - Dashboard</title>
-    <link rel="icon" type="image/png" href="logo.png"> <!-- Favicon -->
+    <link rel="icon" type="image/png" href="dono.png"> <!-- Favicon -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 0; background: #ffcc00; }
-        .splash { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #ffcc00; color: white; font-size: 24px; }
-        .splash img { width: 120px; margin-bottom: 20px; }
-        .dashboard { display: none; padding: 20px; text-align: center; }
-        h1 { color: #3a3a3a; font-size: 28px; margin-top: 20px; }
-        .progress-container { position: relative; width: 250px; height: 125px; margin: 20px auto; }
-        .progress-circle { width: 100%; height: 100%; border-radius: 125px 125px 0 0; background: #eee; position: absolute; top: 0; left: 0; overflow: hidden; }
-        .progress-fill { width: 100%; height: 100%; position: absolute; top: 100%; left: 0; background: #d32f2f; transition: top 1s ease-in-out; }
-        .points-container { font-size: 20px; font-weight: bold; margin-top: 10px; }
-        .points { font-size: 36px; font-weight: bold; color: #d32f2f; }
-        button { background: #d32f2f; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 5px; margin: 10px; font-size: 18px; }
-        #reader { width: 300px; height: 300px; margin: 20px auto; display: none; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .dashboard {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .logo {
+            width: 120px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+        }
+        .progress-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            margin: 30px 0;
+        }
+        .progress-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            background: #f0f0f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            border: 10px solid #e1e1e1;
+        }
+        .progress-fill {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #d32f2f;
+            transition: top 1s ease-in-out;
+        }
+        .points-container {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+        .points {
+            font-size: 36px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        button {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 80%;
+            margin-top: 30px;
+        }
+        button:hover {
+            background: #9c2424;
+        }
+        #reader {
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <div class="splash">
-        <img src="logo.png" alt="FVSS Bonus Logo">
-        <h1 id="welcome"></h1>
-        <p>Lädt...</p>
-    </div>
-
     <div class="dashboard">
-        <h1>FVSS Bonus</h1>
-        
+        <img src="dono.png" alt="FVSS Bonus Logo" class="logo"> <!-- Logo eingebunden -->
+        <h1 id="welcome"></h1>
+
+        <!-- Halbkreis-Fortschrittsanzeige -->
         <div class="progress-container">
             <div class="progress-circle">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
+
+        <!-- Punkteanzeige -->
         <div class="points-container">
             <p class="points" id="points">0,0 Punkte</p>
         </div>
 
+        <!-- QR-Code Scanner starten -->
         <button onclick="startScanner()">QR-Code scannen</button>
+
+        <!-- QR Code Scanner -->
         <div id="reader"></div>
     </div>
 
