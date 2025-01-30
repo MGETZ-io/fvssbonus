@@ -37,7 +37,7 @@
             font-weight: 600;
             color: #333;
         }
-        /* SVG Ring Container */
+        /* Container for the ring progress */
         .progress-container {
             position: relative;
             width: 200px;
@@ -45,7 +45,7 @@
             margin: 30px 0;
         }
         .progress-ring {
-            transform: rotate(-90deg);
+            transform: rotate(-90deg); /* Rotate the SVG so the animation starts from top */
         }
         .circle-background {
             fill: none;
@@ -59,6 +59,12 @@
             stroke-linecap: round;
             transition: stroke-dasharray 1s ease-in-out;
         }
+        .circle-inner {
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 15;
+        }
+        /* Styling for the point display */
         .points-container {
             font-size: 20px;
             margin: 20px 0;
@@ -96,15 +102,19 @@
         <img src="dono.png" alt="FVSS Bonus Logo" class="logo"> <!-- Logo eingebunden -->
         <h1 id="welcome"></h1>
 
-        <!-- SVG Halbkreis-Fortschrittsanzeige -->
+        <!-- SVG Halbkreis mit innerem und äußerem Ring -->
         <div class="progress-container">
             <svg class="progress-ring" width="200" height="200">
+                <!-- Hintergrundkreis -->
                 <circle class="circle-background" cx="100" cy="100" r="90" />
+                <!-- Innerer Kreis -->
+                <circle class="circle-inner" cx="100" cy="100" r="70" />
+                <!-- Fortschrittskreis, der sich füllt -->
                 <circle class="circle-fill" cx="100" cy="100" r="90" stroke-dasharray="0, 565.48" />
             </svg>
         </div>
 
-        <!-- Punkteanzeige -->
+        <!-- Punktanzeige -->
         <div class="points-container">
             <p class="points" id="points">0,0 Punkte</p>
         </div>
