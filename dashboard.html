@@ -6,45 +6,52 @@
     <title>FVSS Bonus - Dashboard</title>
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f9; }
-        h1 { color: #3a3a3a; font-size: 32px; margin-top: 20px; }
-        .points { font-size: 36px; font-weight: bold; color: #2d9cdb; margin: 20px; }
-        button { background: #2d9cdb; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 5px; margin: 10px; }
+        body { font-family: Arial, sans-serif; text-align: center; margin: 0; background: #ffcc00; }
+        .splash { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #ffcc00; color: white; font-size: 24px; }
+        .dashboard { display: none; padding: 20px; text-align: center; }
+        h1 { color: #3a3a3a; font-size: 28px; margin-top: 20px; }
+        .points-container { background: white; padding: 15px; border-radius: 10px; display: inline-block; margin: 20px; }
+        .points { font-size: 36px; font-weight: bold; color: #d32f2f; }
+        button { background: #d32f2f; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 5px; margin: 10px; font-size: 18px; }
         #scanner-container { margin: 20px auto; width: 300px; height: 300px; display: none; }
-        .user-info { font-size: 18px; color: #333; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-    <h1>Dein FVSS Bonus</h1>
-    <p class="user-info" id="user-info"></p>
-    <p class="points" id="points">0,0 Punkte</p>
+    <div class="splash">
+        <h1 id="welcome"></h1>
+        <p>Lädt...</p>
+    </div>
 
-    <button onclick="startScanner()">QR-Code scannen</button>
-    <button onclick="addPoints()">Punkte hinzufügen</button>
+    <div class="dashboard">
+        <h1>FVSS Bonus</h1>
+        <div class="points-container">
+            <p class="points" id="points">0,0 Punkte</p>
+        </div>
 
-    <div id="scanner-container"></div>
-
-    <div>
-        <input type="number" id="betrag" placeholder="Betrag eingeben (€)" step="0.01">
+        <button onclick="startScanner()">QR-Code scannen</button>
+        <div id="scanner-container"></div>
     </div>
 
     <script>
         let user = "";
         let points = 0.0;
 
-        // Benutzer aus der URL holen
         function getUserFromURL() {
             const params = new URLSearchParams(window.location.search);
-            user = params.get("user") || "Unbekannter Nutzer";
-            document.getElementById("user-info").innerText = `Angemeldet als: ${user}`;
-            
-            // Lade gespeicherte Punkte für diesen Benutzer
+            user = params.get("user") || "Gast";
+            document.getElementById("welcome").innerText = `Willkommen, ${user}!`;
+
             const storedPoints = localStorage.getItem(`points_${user}`);
             if (storedPoints) {
                 points = parseFloat(storedPoints);
                 document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
             }
+
+            setTimeout(() => {
+                document.querySelector(".splash").style.display = "none";
+                document.querySelector(".dashboard").style.display = "block";
+            }, 2000);
         }
 
         function startScanner() {
@@ -64,18 +71,18 @@
         }
 
         function handleQRCode(qrCode) {
-            if (qrCode === "85274319") { // Punkte sammeln
+            if (qrCode === "85274319") {
                 let betrag = parseFloat(prompt("Wie viel hast du bezahlt? (in €)"));
                 if (isNaN(betrag) || betrag <= 0) {
-                    alert("Bitte einen gültigen Betrag eingeben!");
+                    alert("Ungültiger Betrag!");
                     return;
                 }
                 let newPoints = betrag * 0.5;
                 points += Math.round(newPoints * 2) / 2;
-            } else if (qrCode === "43896712") { // Punkte ausgeben
+            } else if (qrCode === "43896712") {
                 let abziehen = parseFloat(prompt("Wie viele Punkte möchtest du abziehen?"));
                 if (isNaN(abziehen) || abziehen <= 0 || abziehen > points) {
-                    alert("Ungültige Eingabe! Stelle sicher, dass du genügend Punkte hast.");
+                    alert("Ungültige Eingabe!");
                     return;
                 }
                 points -= abziehen;
@@ -84,19 +91,6 @@
                 return;
             }
 
-            document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
-            localStorage.setItem(`points_${user}`, points);
-        }
-
-        function addPoints() {
-            let betrag = parseFloat(document.getElementById("betrag").value);
-            if (isNaN(betrag) || betrag <= 0) {
-                alert("Bitte einen gültigen Betrag eingeben!");
-                return;
-            }
-
-            let newPoints = betrag * 0.5;
-            points += Math.round(newPoints * 2) / 2;
             document.getElementById("points").innerText = points.toFixed(1) + " Punkte";
             localStorage.setItem(`points_${user}`, points);
         }
