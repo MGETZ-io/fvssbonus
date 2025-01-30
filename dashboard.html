@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FVSS Bonus - Dashboard</title>
     <link rel="icon" type="image/png" href="dono.png"> <!-- Favicon -->
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script> <!-- QR Code Script -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,7 +37,7 @@
             font-weight: 600;
             color: #333;
         }
-        /* Container for the ring progress */
+        /* Container für den Ring (Halbkreis) */
         .progress-container {
             position: relative;
             width: 200px;
@@ -45,7 +45,7 @@
             margin: 30px 0;
         }
         .progress-ring {
-            transform: rotate(-90deg); /* Rotate the SVG so the animation starts from top */
+            transform: rotate(-90deg); /* Dreht den SVG, damit die Animation oben beginnt */
         }
         .circle-background {
             fill: none;
@@ -64,7 +64,7 @@
             stroke: #ffffff;
             stroke-width: 15;
         }
-        /* Styling for the point display */
+        /* Punktanzeige */
         .points-container {
             font-size: 20px;
             margin: 20px 0;
@@ -100,7 +100,7 @@
 
     <div class="dashboard">
         <img src="dono.png" alt="FVSS Bonus Logo" class="logo"> <!-- Logo eingebunden -->
-        <h1 id="welcome"></h1>
+        <h1 id="welcome">Willkommen, Benutzer!</h1>
 
         <!-- SVG Halbkreis mit innerem und äußerem Ring -->
         <div class="progress-container">
@@ -127,7 +127,7 @@
     </div>
 
     <script>
-        let user = "";
+        let user = "Benutzer";
         let points = 0.0;
         let scanner = null;
         const maxPoints = 500;
